@@ -136,6 +136,36 @@ See [Makefile](./Makefile)
 
 ### Running in Docker
 
+#### Build and run the Docker image
+
+This repository contains a multi-stage Dockerfile that builds the React frontend and Spring Boot backend into a single application image.
+
+Build the image:
+
+```bash
+make docker-build
+```
+
+Run the application:
+
+```bash
+make docker-run
+```
+
+Open http://localhost:8080 in your browser.
+
+The Docker image is also published on Docker Hub:
+
+`tkachevkirill/ads-board:1.0`
+
+To run the published image:
+
+```bash
+docker run --rm -p 8080:8080 tkachevkirill/ads-board:1.0
+```
+
+The default `dev` profile uses an in-memory H2 database. Data is not preserved when the container stops.
+
 Pass JVM flags via `JAVA_OPTS`:
 
 ```bash

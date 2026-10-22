@@ -25,3 +25,9 @@ lint-fix:
 	./gradlew spotlessApply
 
 .PHONY: build
+
+docker-build:
+	docker build -t ads-board:local .
+
+docker-run:
+	docker run --rm -p 8080:8080 ads-board:local
