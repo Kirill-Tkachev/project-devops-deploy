@@ -1,0 +1,2 @@
+[webservers]
+hexlet-devops ansible_host=81.26.178.122 ansible_user=tkachev ansible_ssh_private_key_file=~/.ssh/id_ed25519
