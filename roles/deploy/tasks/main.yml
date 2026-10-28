@@ -1,0 +1,34 @@
+---
+- name: Create application directory
+  ansible.builtin.file:
+    path: "{{ deploy_dir }}"
+    state: directory
+    owner: tkachev
+    group: tkachev
+    mode: '0755'
+
+- name: Copy Docker Compose configuration
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/compose.yml"
+    dest: "{{ deploy_dir }}/compose.yml"
+    owner: tkachev
+    group: tkachev
+    mode: '0644'
+
+- name: Create Docker Compose environment file
+  ansible.builtin.copy:
+    dest: "{{ deploy_dir }}/.env"
+    content: |
+      APP_VERSION={{ deploy_image_version }}
+    owner: tkachev
+    group: tkachev
+    mode: '0600'
+
+- name: Deploy application with Docker Compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ deploy_dir }}"
+    state: present
+    pull: always
+    remove_orphans: true
+    wait: true
+    wait_timeout: 120

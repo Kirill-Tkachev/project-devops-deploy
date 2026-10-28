@@ -1,0 +1,11 @@
+services:
+  app:
+    image: tkachevkirill/ads-board:${APP_VERSION:?APP_VERSION is required}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - images_data:/tmp/bulletin-images
+
+volumes:
+  images_data:

@@ -1,0 +1,7 @@
+---
+- name: Deploy Bulletins application
+  hosts: webservers
+  become: true
+
+  roles:
+    - deploy

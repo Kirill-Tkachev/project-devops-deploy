@@ -36,3 +36,11 @@ out/
 ### VS Code ###
 .vscode/
 *.db
+
+### Deployment secrets ###
+.env
+.env.*
+!.env.example
+.vault_pass
+.vault_password
+vault-password.txt

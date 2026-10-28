@@ -31,3 +31,10 @@ docker-build:
 
 docker-run:
 	docker run --rm -p 8080:8080 ads-board:local
+
+VERSION ?= latest
+
+.PHONY: deploy
+
+deploy:
+	ansible-playbook -i inventory deploy.yml -e deploy_image_version=$(VERSION)
