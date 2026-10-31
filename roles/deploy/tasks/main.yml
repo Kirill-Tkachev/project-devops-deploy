@@ -20,9 +20,11 @@
     dest: "{{ deploy_dir }}/.env"
     content: |
       APP_VERSION={{ deploy_image_version }}
+      POSTGRES_PASSWORD={{ vault_postgres_password }}
     owner: tkachev
     group: tkachev
     mode: '0600'
+  no_log: true
 
 - name: Deploy application with Docker Compose
   community.docker.docker_compose_v2:

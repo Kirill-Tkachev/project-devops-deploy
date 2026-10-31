@@ -2,6 +2,14 @@ services:
   app:
     image: tkachevkirill/ads-board:${APP_VERSION:?APP_VERSION is required}
     restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bulletins
+      SPRING_DATASOURCE_USERNAME: bulletins
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "127.0.0.1:8080:8080"
     volumes:
@@ -10,7 +18,23 @@ services:
       driver: json-file
       options:
         max-size: "10m"
-        max-file: "3"    
+        max-file: "3"
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bulletins
+      POSTGRES_USER: bulletins
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bulletins -d bulletins"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   images_data:
+  postgres_data:
