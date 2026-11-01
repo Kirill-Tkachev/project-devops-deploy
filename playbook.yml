@@ -77,6 +77,23 @@
         name: nginx
         state: present
 
+    - name: Install Certbot
+      ansible.builtin.apt:
+        name:
+          - certbot
+          - python3-certbot-nginx
+        state: present
+
+    - name: Configure Nginx reload after certificate renewal
+      ansible.builtin.copy:
+        dest: /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
+        content: |
+          #!/bin/sh
+          systemctl reload nginx
+        owner: root
+        group: root
+        mode: '0755'
+
     - name: Copy Nginx configuration
       ansible.builtin.copy:
         src: nginx.conf

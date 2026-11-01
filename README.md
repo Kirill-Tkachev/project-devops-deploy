@@ -6,7 +6,7 @@ Bulletin board service.
 
 ## Deployment
 
-Domain: http://hexlet-bulletins.duckdns.org
+Domain: https://hexlet-bulletins.duckdns.org
 
 Server IP: `81.26.178.122`
 
@@ -14,7 +14,7 @@ Server IP: `81.26.178.122`
 
 Nginx is installed and configured using Ansible (`playbook.yml` and `nginx.conf`).
 
-- Nginx listens on port `80` and acts as a reverse proxy to the application running on `127.0.0.1:8080`.
+- Nginx redirects HTTP traffic from port `80` to HTTPS on port `443` and acts as a reverse proxy to the application running on `127.0.0.1:8080`.
 - Frontend static assets under `/assets/` are served through Nginx with browser caching enabled for one year.
 - Uploaded bulletin images are stored in Yandex Object Storage (S3) and accessed directly using temporary presigned URLs.
 
@@ -25,6 +25,24 @@ ansible-playbook -i inventory playbook.yml
 ```
 
 Ansible validates the Nginx configuration and reloads the service when the configuration changes.
+
+### HTTPS and Let's Encrypt
+
+HTTPS is configured using Nginx and a free Let's Encrypt certificate for `hexlet-bulletins.duckdns.org`.
+
+- HTTP requests on port `80` are permanently redirected to HTTPS on port `443`.
+- Nginx supports TLS 1.2 and TLS 1.3 with modern cipher suites.
+- Certbot and its Nginx plugin are installed using Ansible.
+- Certificate renewal is automated using `certbot.timer`.
+- After successful certificate renewal, a Certbot deploy hook reloads Nginx to apply the updated certificate.
+
+To test certificate renewal:
+
+```bash
+ansible -i inventory webservers -b -m command -a "certbot renew --dry-run --run-deploy-hooks"
+```
+
+The HTTPS connection, HTTP redirect, certificate renewal and Nginx reload have been verified successfully.
 
 > **Fork policy**: this upstream repository is read-only. We do not review or merge pull requests and we do not accept infrastructure changes (Dockerfiles, Ansible roles, CI/CD workflows, etc.). To experiment or extend the project, fork it and work inside your own repository.
 
