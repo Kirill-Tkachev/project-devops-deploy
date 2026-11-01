@@ -1,3 +1,2 @@
 ---
-deploy_dir: /opt/bulletins
 deploy_image_version: latest
