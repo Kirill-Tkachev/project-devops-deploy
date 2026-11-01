@@ -87,6 +87,36 @@ All other variables supported by Spring Boot can be overridden the same way; che
 - Make.
 - NodeJS 20+
 
+### Deployment requirements
+
+Control machine (where Ansible runs):
+
+- Linux or WSL.
+- Ansible installed.
+- Make installed.
+- SSH access to the target server using an SSH key.
+- Ansible collections installed using `make ansible-install`.
+- An encrypted `secrets.yml` file containing deployment credentials.
+
+Target server:
+
+- Ubuntu 24.04.
+- SSH access with a user that has sudo privileges.
+- Internet access to download Docker packages and container images.
+- Ports 22, 80 and 443 available for SSH, HTTP and HTTPS.
+
+Install Ansible collections:
+
+```bash
+make ansible-install
+```
+
+Deploy the application:
+
+```bash
+make deploy
+```
+
 ## Running
 
 ### Backend (local dev profile)
