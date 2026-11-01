@@ -72,6 +72,37 @@
         port: '22'
         proto: tcp
 
+    - name: Install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Copy Nginx configuration
+      ansible.builtin.copy:
+        src: nginx.conf
+        dest: /etc/nginx/sites-available/bulletins
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Reload Nginx
+
+    - name: Enable Nginx site
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/bulletins
+        dest: /etc/nginx/sites-enabled/bulletins
+        state: link
+      notify: Reload Nginx
+
+    - name: Disable default Nginx site
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Reload Nginx
+
+    - name: Validate Nginx configuration
+      ansible.builtin.command: nginx -t
+      changed_when: false
+
     - name: Allow HTTP and HTTPS through UFW
       community.general.ufw:
         rule: allow
@@ -94,3 +125,9 @@
     - name: Enable UFW
       community.general.ufw:
         state: enabled
+
+  handlers:
+    - name: Reload Nginx
+      ansible.builtin.systemd_service:
+        name: nginx
+        state: reloaded

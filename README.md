@@ -10,6 +10,22 @@ Domain: http://hexlet-bulletins.duckdns.org
 
 Server IP: `81.26.178.122`
 
+### Nginx
+
+Nginx is installed and configured using Ansible (`playbook.yml` and `nginx.conf`).
+
+- Nginx listens on port `80` and acts as a reverse proxy to the application running on `127.0.0.1:8080`.
+- Frontend static assets under `/assets/` are served through Nginx with browser caching enabled for one year.
+- Uploaded bulletin images are stored in Yandex Object Storage (S3) and accessed directly using temporary presigned URLs.
+
+To apply the Nginx configuration, run:
+
+```bash
+ansible-playbook -i inventory playbook.yml
+```
+
+Ansible validates the Nginx configuration and reloads the service when the configuration changes.
+
 > **Fork policy**: this upstream repository is read-only. We do not review or merge pull requests and we do not accept infrastructure changes (Dockerfiles, Ansible roles, CI/CD workflows, etc.). To experiment or extend the project, fork it and work inside your own repository.
 
 The default `dev` profile uses an in-memory H2 database and seeds 10 sample bulletins through `DataInitializer`, so the API works immediately after startup.
