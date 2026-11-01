@@ -3,10 +3,16 @@ services:
     image: tkachevkirill/ads-board:${APP_VERSION:?APP_VERSION is required}
     restart: unless-stopped
     environment:
+      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bulletins
       SPRING_DATASOURCE_USERNAME: bulletins
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      STORAGE_S3_BUCKET: ${STORAGE_S3_BUCKET}
+      STORAGE_S3_REGION: ${STORAGE_S3_REGION}
+      STORAGE_S3_ENDPOINT: ${STORAGE_S3_ENDPOINT}
+      STORAGE_S3_ACCESSKEY: ${STORAGE_S3_ACCESSKEY}
+      STORAGE_S3_SECRETKEY: ${STORAGE_S3_SECRETKEY}
     depends_on:
       db:
         condition: service_healthy

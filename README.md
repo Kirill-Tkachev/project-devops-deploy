@@ -235,3 +235,45 @@ Override the host/port with `MANAGEMENT_SERVER_PORT` if you changed it; no Prome
     - Image shows up in bulletin show view (URL should either point to CDN or be a presigned S3 link).
     - Object exists in S3 bucket (check via AWS console or `aws s3 ls s3://your-bucket/bulletins/...`).
 5. Optional: run `curl -I "$(curl -s .../api/files/view?key=... | jq -r .url)"` to ensure the presigned URL is valid from the production environment.
+
+
+## Yandex Object Storage (S3)
+
+The application uses Yandex Object Storage to store bulletin images in production.
+
+### Manual setup
+
+1. Create a private bucket named `hexlet-bulletins-tkachev` in Yandex Object Storage.
+2. Create a service account named `bulletins-s3`.
+3. Grant the service account the `storage.editor` role for the bucket.
+4. Generate a static access key and secret key for the service account.
+5. Store the credentials in an encrypted Ansible Vault file (`secrets.yml`) using the variables:
+   - `vault_s3_access_key`
+   - `vault_s3_secret_key`
+
+Do not commit `secrets.yml` or expose the credentials.
+
+### Configuration
+
+The Ansible deployment role passes the following environment variables to the application:
+
+- `STORAGE_S3_BUCKET=hexlet-bulletins-tkachev`
+- `STORAGE_S3_REGION=ru-central1`
+- `STORAGE_S3_ENDPOINT=https://storage.yandexcloud.net`
+- `STORAGE_S3_ACCESSKEY` — from Ansible Vault
+- `STORAGE_S3_SECRETKEY` — from Ansible Vault
+
+Deploy the application:
+
+```bash
+make deploy
+```
+
+### Verification
+
+1. Create a bulletin and upload an image through the React Admin interface.
+2. Verify that the image appears in the `bulletins/` prefix of the S3 bucket.
+3. Confirm that the image is displayed in the application.
+4. Restart the application container and verify that the image remains accessible.
+
+The bucket is private. The application generates temporary presigned URLs to access stored images.

@@ -21,6 +21,11 @@
     content: |
       APP_VERSION={{ deploy_image_version }}
       POSTGRES_PASSWORD={{ vault_postgres_password }}
+      STORAGE_S3_BUCKET=hexlet-bulletins-tkachev
+      STORAGE_S3_REGION=ru-central1
+      STORAGE_S3_ENDPOINT=https://storage.yandexcloud.net
+      STORAGE_S3_ACCESSKEY={{ vault_s3_access_key }}
+      STORAGE_S3_SECRETKEY={{ vault_s3_secret_key }}
     owner: tkachev
     group: tkachev
     mode: '0600'
